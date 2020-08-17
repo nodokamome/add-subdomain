@@ -1,3 +1,3 @@
 # add-subdomain
-apache環境でvhostを使用したサブドメイン追加スクリプト。
+apache環境でvhostを使用したサブドメイン追加スクリプト。\n
 ディレクトリ、vhost.[サブドメイン].conf、SSL(Let's encrypt)まで行う。)
