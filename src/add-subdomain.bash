@@ -1,5 +1,5 @@
 #!/bin/bash
-#スクリプト開始時刻
+#サブドメイン追加スクリプト
 echo ======================;
 echo "subdomaint script"
 date;
@@ -12,8 +12,16 @@ read -p "subdomain: " subdomain
 tty -s && echo
 echo "${subdomain}"
 
+#ユーザー設定
+read -p "user: " user
+tty -s && echo
+echo "${user}"
 
+
+#ディレクトリ作成
 mkdir /var/www/html/${subdomain};
+
+#http(Port:80)でvhost作成
 cat << EOF > /etc/httpd/conf.d/vhost-${subdomain}.conf
 <VirtualHost *:80>
     ServerName ${subdomain}
@@ -23,12 +31,14 @@ cat << EOF > /etc/httpd/conf.d/vhost-${subdomain}.conf
 </VirtualHost>
 EOF
 
+#設定反映
 systemctl restart httpd;
 
-
+#Let's encryptで設定
 certbot certonly --webroot -w /var/www/html/${subdomain} -d ${subdomain} -m ${subdomain} --agree-tos -n
-cat << EOF >> /etc/httpd/conf.d/vhost-${subdomain}.conf
 
+#https(Port:443)でvhost追記
+cat << EOF >> /etc/httpd/conf.d/vhost-${subdomain}.conf
 <VirtualHost *:443>
     ServerName ${subdomain}
     DocumentRoot /var/www/html/${subdomain}
@@ -42,9 +52,10 @@ cat << EOF >> /etc/httpd/conf.d/vhost-${subdomain}.conf
 </VirtualHost>
 EOF
 
+#設定反映
 systemctl restart httpd;
 
 #htmlに書き込み設定
 cd /var/www;
-chown -R apache:nodokamome html;
+chown -R apache:${user} html;
 chmod -R 775 html;
