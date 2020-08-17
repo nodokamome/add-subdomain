@@ -17,7 +17,6 @@ read -p "user: " user
 tty -s && echo
 echo "${user}"
 
-
 #ディレクトリ作成
 mkdir /var/www/html/${subdomain};
 
